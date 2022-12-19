@@ -12,12 +12,12 @@ import java.net.SocketTimeoutException
 class SearchActivityViewModel(private val repository: FooDiRepository) : ViewModel() {
     val searchFoodList = MutableLiveData<MutableList<FoodData>>()
     val searchText = MutableLiveData<String>("")
-    val errorMessage = MutableLiveData<String>()
+    val toastMessage = MutableLiveData<String>()
     val isProgress = MutableLiveData(false)
     val isNextButtonEnable = MutableLiveData(false)
     val isPreviousButtonEnable = MutableLiveData(false)
 
-    fun getSearchFood(page : String){
+    fun getSearchFood(page : String , callFromDelete : Boolean){
         try{
             CoroutineScope(Dispatchers.IO).launch {
                 isProgress.postValue(true)
@@ -27,9 +27,23 @@ class SearchActivityViewModel(private val repository: FooDiRepository) : ViewMod
 
                 if(response.isSuccessful){
                     if(response.body()?.results!!.isEmpty()){
-                        CoroutineScope(Dispatchers.Main).launch {
-                            errorMessage.value = "검색 결과가 존재하지 않습니다."
+                        if(callFromDelete){
+                            CoroutineScope(Dispatchers.Main).launch {
+                                searchFoodList.value = response.body()?.results
+                                isNextButtonEnable.value = nextButtonEnable
+                                isPreviousButtonEnable.value = previousButtonEnable
+                                isProgress.value = false
+                            }
+                        } else {
+                            CoroutineScope(Dispatchers.Main).launch {
+                                toastMessage.value = "검색 결과가 존재하지 않습니다."
+                                searchFoodList.value = response.body()?.results
+                                isNextButtonEnable.value = nextButtonEnable
+                                isPreviousButtonEnable.value = previousButtonEnable
+                                isProgress.value = false
+                            }
                         }
+
                     } else {
                         if(response.body()?.totalCount!! > 1 && page.toInt() < response.body()?.totalCount!!){
                             nextButtonEnable = true
@@ -45,12 +59,37 @@ class SearchActivityViewModel(private val repository: FooDiRepository) : ViewMod
                         }
                     }
                 } else {
-                    errorMessage.postValue("통신에 실패하였습니다.")
-                    isProgress.value = false
+                    toastMessage.postValue("통신에 실패하였습니다.")
+                    isProgress.postValue(false)
                 }
             }
         } catch (socketTimeoutException :SocketTimeoutException){
-            errorMessage.value = "서버와 통신 제한 시간이 지났습니다. 다시 시도해주세요"
+            toastMessage.value = "서버와 통신 제한 시간이 지났습니다. 다시 시도해주세요"
+        }
+    }
+
+    fun deleteFood(id : Int , page : Int){
+        isProgress.value = true
+        CoroutineScope(Dispatchers.IO).launch {
+            try{
+                val response = repository.deleteFoodData(id)
+                if(response.isSuccessful){
+                    CoroutineScope(Dispatchers.Main).launch {
+                        toastMessage.value = "성공적으로 삭제하였습니다."
+                        getSearchFood(page.toString() , true)
+                    }
+                } else {
+                    CoroutineScope(Dispatchers.Main).launch{
+                        toastMessage.postValue("통신에 실패하였습니다.")
+                        isProgress.value = false
+                    }
+                }
+            } catch (socketTimeoutException :SocketTimeoutException){
+                CoroutineScope(Dispatchers.Main).launch{
+                    toastMessage.value = "서버와 통신 제한 시간이 지났습니다. 다시 시도해주세요"
+                    isProgress.value = false
+                }
+            }
         }
     }
 }

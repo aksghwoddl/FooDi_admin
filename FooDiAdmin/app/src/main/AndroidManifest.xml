@@ -30,6 +30,11 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <activity android:name=".ui.activity.detail.DetailActivity"
+            android:windowSoftInputMode="adjustPan"
+            >
+
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>

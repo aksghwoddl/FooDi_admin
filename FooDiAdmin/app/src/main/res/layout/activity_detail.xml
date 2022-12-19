@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+    <data>
+        <variable
+            name="detailViewModel"
+            type="com.lee.foodiadmin.ui.activity.detail.viewmodel.DetailActivityViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        >
+
+        <RelativeLayout
+            android:id="@+id/headerTitleLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/contentScrollview"
+            android:background="@color/main_color"
+            >
+            <ImageView
+                android:id="@+id/headerLogoImageView"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@mipmap/ic_launcher_monochrome"
+                />
+
+            <TextView
+                android:id="@+id/headerTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="@string/header_title"
+                android:fontFamily="@font/swagger"
+                android:textColor="@color/text_color"
+                android:background="@color/main_color"
+                android:textSize="25sp"
+                android:gravity="center_vertical"
+                android:padding="5dp"
+                android:layout_centerHorizontal="true"
+                />
+        </RelativeLayout>
+
+        <ScrollView
+            android:id="@+id/contentScrollview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/headerTitleLayout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/modifyButton"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:id="@+id/foodNameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color"
+                    android:text="@string/food_name"
+                    android:fontFamily="@font/swagger"
+                    android:textSize="20sp"
+                    android:padding="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/foodNameInputText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_textview"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@={detailViewModel.foodName}"
+                    />
+
+                <TextView
+                    android:id="@+id/calorieTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color"
+                    android:text="@string/calorie"
+                    android:fontFamily="@font/swagger"
+                    android:textSize="20sp"
+                    android:padding="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/calorieInputText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_textview"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@={detailViewModel.calorie}"
+                    android:inputType="number"
+                    />
+
+                <TextView
+                    android:id="@+id/carbohydrateTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color"
+                    android:text="@string/carbohydrate"
+                    android:fontFamily="@font/swagger"
+                    android:textSize="20sp"
+                    android:padding="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/carbohydrateInputText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_textview"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@={detailViewModel.carbohydrate}"
+                    android:inputType="number"
+                    />
+
+                <TextView
+                    android:id="@+id/proteinTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color"
+                    android:text="@string/protein"
+                    android:fontFamily="@font/swagger"
+                    android:textSize="20sp"
+                    android:padding="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/proteinInputText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_textview"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@={detailViewModel.protein}"
+                    android:inputType="number"
+                    />
+
+                <TextView
+                    android:id="@+id/fatTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color"
+                    android:text="@string/fat"
+                    android:fontFamily="@font/swagger"
+                    android:textSize="20sp"
+                    android:padding="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/fatInputText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_textview"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@={detailViewModel.fat}"
+                    android:inputType="number"
+                    />
+
+                <TextView
+                    android:id="@+id/sugarTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:textColor="@color/text_color"
+                    android:text="@string/sugar"
+                    android:fontFamily="@font/swagger"
+                    android:textSize="20sp"
+                    android:padding="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/sugarInputText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_textview"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@={detailViewModel.sugar}"
+                    android:inputType="number"
+                    />
+
+                <TextView
+                    android:id="@+id/saltTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color"
+                    android:text="@string/salt"
+                    android:fontFamily="@font/swagger"
+                    android:textSize="20sp"
+                    android:padding="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/saltInputText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_textview"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@={detailViewModel.salt}"
+                    android:inputType="number"
+                    />
+
+                <TextView
+                    android:id="@+id/cholesterolTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color"
+                    android:text="@string/cholesterol"
+                    android:fontFamily="@font/swagger"
+                    android:textSize="20sp"
+                    android:padding="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/cholesterolInputText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_textview"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@={detailViewModel.cholesterol}"
+                    android:inputType="number"
+                    />
+
+                <TextView
+                    android:id="@+id/saturatedFatTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color"
+                    android:text="@string/saturated_fat"
+                    android:fontFamily="@font/swagger"
+                    android:textSize="20sp"
+                    android:padding="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/saturatedFatInputText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_textview"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@={detailViewModel.saturatedFat}"
+                    android:inputType="number"
+                    />
+
+                <TextView
+                    android:id="@+id/transFatTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color"
+                    android:text="@string/trans_fat"
+                    android:fontFamily="@font/swagger"
+                    android:textSize="20sp"
+                    android:padding="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/transFatInputText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_textview"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@={detailViewModel.transFat}"
+                    android:inputType="number"
+                    />
+
+                <TextView
+                    android:id="@+id/companyTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color"
+                    android:text="@string/company"
+                    android:fontFamily="@font/swagger"
+                    android:textSize="20sp"
+                    android:padding="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/companyInputText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_textview"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@={detailViewModel.company}"
+                    />
+
+                <TextView
+                    android:id="@+id/servingSizeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color"
+                    android:text="@string/serving_size"
+                    android:fontFamily="@font/swagger"
+                    android:textSize="20sp"
+                    android:padding="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/servingSizeInputText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_textview"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="@={detailViewModel.servingSize}"
+                    android:inputType="number"
+                    />
+            </LinearLayout>
+        </ScrollView>
+
+        <Button
+            android:id="@+id/modifyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/contentScrollview"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/modify"
+            android:fontFamily="@font/swagger"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
