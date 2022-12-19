@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">FooDiAdmin</string>
+    <string name="app_name">푸디 관리자</string>
+    <string name="search">검색</string>
+    <string name="header_title">푸디 관리자 페이지 입니다</string>
+    <string name="previous">이전</string>
+    <string name="next">다음</string>
 </resources>
