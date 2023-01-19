@@ -1,7 +1,11 @@
 package com.lee.foodiadmin.ui.activity.search.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.lee.foodiadmin.R
+import com.lee.foodiadmin.common.ResourceProvider
 import com.lee.foodiadmin.data.model.FoodData
 import com.lee.foodiadmin.data.repository.FooDiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,18 +17,36 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchActivityViewModel
-    @Inject constructor(private val repository: FooDiRepository) : ViewModel() {
-    val searchFoodList = MutableLiveData<MutableList<FoodData>>()
+    @Inject constructor(
+        private val repository: FooDiRepository ,
+        private val resourceProvider: ResourceProvider
+    ) : ViewModel() {
     val searchText = MutableLiveData<String>("")
-    val toastMessage = MutableLiveData<String>()
-    val isProgress = MutableLiveData(false)
-    val isNextButtonEnable = MutableLiveData(false)
-    val isPreviousButtonEnable = MutableLiveData(false)
+
+    private val _searchFoodList = MutableLiveData<MutableList<FoodData>>()
+    val searchFoodList : LiveData<MutableList<FoodData>>
+    get() = _searchFoodList
+
+    private val _toastMessage = MutableLiveData<String>()
+    val toastMessage : LiveData<String>
+    get() = _toastMessage
+
+    private val _isProgress = MutableLiveData(false)
+    val isProgress : LiveData<Boolean>
+    get() = _isProgress
+
+    private val _isNextButtonEnable = MutableLiveData(false)
+    val isNextButtonEnable : LiveData<Boolean>
+    get() = _isNextButtonEnable
+
+    private val _isPreviousButtonEnable = MutableLiveData(false)
+    val isPreviousButtonEnable : LiveData<Boolean>
+    get() = _isPreviousButtonEnable
 
     fun getSearchFood(page : String , callFromDelete : Boolean){
         try{
-            CoroutineScope(Dispatchers.IO).launch {
-                isProgress.postValue(true)
+            viewModelScope.launch {
+                _isProgress.value = true
                 val response = repository.getSearchFood(searchText.value!! , page)
                 var nextButtonEnable = false
                 var previousButtonEnable  = false
@@ -32,20 +54,17 @@ class SearchActivityViewModel
                 if(response.isSuccessful){
                     if(response.body()?.results!!.isEmpty()){
                         if(callFromDelete){
-                            CoroutineScope(Dispatchers.Main).launch {
-                                searchFoodList.value = response.body()?.results
-                                isNextButtonEnable.value = nextButtonEnable
-                                isPreviousButtonEnable.value = previousButtonEnable
-                                isProgress.value = false
-                            }
+                                _searchFoodList.value = response.body()?.results
+                                _isNextButtonEnable.value = nextButtonEnable
+                                _isPreviousButtonEnable.value = previousButtonEnable
+                                _isProgress.value = false
+
                         } else {
-                            CoroutineScope(Dispatchers.Main).launch {
-                                toastMessage.value = "검색 결과가 존재하지 않습니다."
-                                searchFoodList.value = response.body()?.results
-                                isNextButtonEnable.value = nextButtonEnable
-                                isPreviousButtonEnable.value = previousButtonEnable
-                                isProgress.value = false
-                            }
+                                _toastMessage.value = resourceProvider.getString(R.string.empty_list)
+                                _searchFoodList.value = response.body()?.results
+                                _isNextButtonEnable.value = nextButtonEnable
+                                _isPreviousButtonEnable.value = previousButtonEnable
+                                _isProgress.value = false
                         }
 
                     } else {
@@ -55,43 +74,42 @@ class SearchActivityViewModel
                         if(response.body()?.totalCount!! > 1 && page.toInt() > 1){
                             previousButtonEnable = true
                         }
-                        CoroutineScope(Dispatchers.Main).launch {
-                            searchFoodList.value = response.body()?.results
-                            isNextButtonEnable.value = nextButtonEnable
-                            isPreviousButtonEnable.value = previousButtonEnable
-                            isProgress.value = false
-                        }
+                            _searchFoodList.value = response.body()?.results
+                            _isNextButtonEnable.value = nextButtonEnable
+                            _isPreviousButtonEnable.value = previousButtonEnable
+                            _isProgress.value = false
                     }
                 } else {
-                    toastMessage.postValue("통신에 실패하였습니다.")
-                    isProgress.postValue(false)
+                    _toastMessage.value = resourceProvider.getString(R.string.response_fail)
+                    _isProgress.value = false
                 }
             }
         } catch (socketTimeoutException :SocketTimeoutException){
-            toastMessage.value = "서버와 통신 제한 시간이 지났습니다. 다시 시도해주세요"
+            _toastMessage.value = resourceProvider.getString(R.string.socket_timeout)
+            _isProgress.value = false
         }
     }
 
     fun deleteFood(id : Int , page : Int){
-        isProgress.value = true
+        _isProgress.value = true
         CoroutineScope(Dispatchers.IO).launch {
             try{
                 val response = repository.deleteFoodData(id)
                 if(response.isSuccessful){
-                    CoroutineScope(Dispatchers.Main).launch {
-                        toastMessage.value = "성공적으로 삭제하였습니다."
+                    viewModelScope.launch {
+                        _toastMessage.value = resourceProvider.getString(R.string.delete_success)
                         getSearchFood(page.toString() , true)
                     }
                 } else {
-                    CoroutineScope(Dispatchers.Main).launch{
-                        toastMessage.postValue("통신에 실패하였습니다.")
-                        isProgress.value = false
+                    viewModelScope.launch{
+                        _toastMessage.value = resourceProvider.getString(R.string.response_fail)
+                        _isProgress.value = false
                     }
                 }
             } catch (socketTimeoutException :SocketTimeoutException){
-                CoroutineScope(Dispatchers.Main).launch{
-                    toastMessage.value = "서버와 통신 제한 시간이 지났습니다. 다시 시도해주세요"
-                    isProgress.value = false
+                viewModelScope.launch{
+                    _toastMessage.value = resourceProvider.getString(R.string.socket_timeout)
+                    _isProgress.value = false
                 }
             }
         }

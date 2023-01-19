@@ -1,9 +1,13 @@
 package com.lee.foodiadmin.ui.activity.detail.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.lee.foodiadmin.R
 import com.lee.foodiadmin.common.NOT_AVAILABLE
+import com.lee.foodiadmin.common.ResourceProvider
 import com.lee.foodiadmin.data.model.UpdateFoodData
 import com.lee.foodiadmin.data.repository.FooDiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +21,10 @@ private const val TAG = "DetailActivityViewModel"
 
 @HiltViewModel
 class DetailActivityViewModel
-    @Inject constructor (private val repository: FooDiRepository) : ViewModel() {
+    @Inject constructor (
+        private val repository: FooDiRepository ,
+        private val resourceProvider: ResourceProvider
+        ) : ViewModel() {
     val foodName = MutableLiveData<String>(NOT_AVAILABLE)
     val calorie = MutableLiveData<String>(NOT_AVAILABLE)
     val carbohydrate = MutableLiveData<String>(NOT_AVAILABLE)
@@ -31,8 +38,13 @@ class DetailActivityViewModel
     val company = MutableLiveData<String>(NOT_AVAILABLE)
     val servingSize = MutableLiveData<String>(NOT_AVAILABLE)
 
-    val toastMessage = MutableLiveData<String>()
-    val isFinishActivity = MutableLiveData(false)
+    private val _toastMessage = MutableLiveData<String>()
+    val toastMessage : LiveData<String>
+    get() = _toastMessage
+
+    private val _isFinishActivity = MutableLiveData(false)
+    val isFinishActivity : LiveData<Boolean>
+    get() = _isFinishActivity
 
     fun updateFoodData(id : Int) {
         val updateFoodData = UpdateFoodData(
@@ -49,25 +61,25 @@ class DetailActivityViewModel
             transFat.value!! ,
             company.value!!
         )
-        Log.d(TAG, "updateFoodData: $updateFoodData")
+
         CoroutineScope(Dispatchers.IO).launch {
             try{
                 val response = repository.updateFoodData(id , updateFoodData)
                 if(response.isSuccessful){
-                    CoroutineScope(Dispatchers.Main).launch{
-                        toastMessage.value = "성공적으로 수정했습니다."
-                        isFinishActivity.value = true
+                    viewModelScope.launch{
+                        _toastMessage.value = resourceProvider.getString(R.string.modify_success)
+                        _isFinishActivity.value = true
                     }
                 } else {
-                    CoroutineScope(Dispatchers.Main).launch{
-                        toastMessage.value = "수정에 실패하였습니다."
-                        isFinishActivity.value = false
+                    viewModelScope.launch{
+                        _toastMessage.value = resourceProvider.getString(R.string.response_fail)
+                        _isFinishActivity.value = false
                     }
                 }
             } catch (socketTimeoutException : SocketTimeoutException){
-                CoroutineScope(Dispatchers.Main).launch {
-                    toastMessage.value = "서버와 통신 제한시간이 지났습니다. 다시 시도하세요."
-                    isFinishActivity.value = false
+                viewModelScope.launch {
+                    _toastMessage.value = resourceProvider.getString(R.string.socket_timeout)
+                    _isFinishActivity.value = false
                 }
             }
         }

@@ -18,4 +18,11 @@
     <string name="serving_size">1회 제공량</string>
     <string name="modify">수정하기</string>
     <string name="delete">삭제하기</string>
+
+    <!-- Network -->
+    <string name="response_fail">통신에 실패하였습니다.</string>
+    <string name="delete_success">성공적으로 삭제하였습니다.</string>
+    <string name="modify_success">성공적으로 수정하였습니다.</string>
+    <string name="empty_list">검색 결과가 존자해지 않습니다.</string>
+    <string name="socket_timeout">서버와 통신 제한 시간이 지났습니다. 다시 시도해주세요</string>
 </resources>
