@@ -9,26 +9,29 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu.OnMenuItemClickListener
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.lee.foodiadmin.R
-import com.lee.foodiadmin.common.*
+import com.lee.foodiadmin.common.EXTRA_SELECTED_FOOD
+import com.lee.foodiadmin.common.PAGE_ONE
+import com.lee.foodiadmin.common.UPDATE_DATA
+import com.lee.foodiadmin.common.Utils
+import com.lee.foodiadmin.common.manager.CustomLinearLayoutManager
 import com.lee.foodiadmin.data.model.FoodData
-import com.lee.foodiadmin.data.repository.FooDiRepository
 import com.lee.foodiadmin.databinding.ActivitySearchBinding
-import com.lee.foodiadmin.factory.FoodiFactory
 import com.lee.foodiadmin.ui.activity.detail.DetailActivity
 import com.lee.foodiadmin.ui.activity.search.viewmodel.SearchActivityViewModel
 import com.lee.foodiadmin.ui.adapter.SearchFoodRecyclerViewAdapter
-import kotlinx.coroutines.CoroutineScope
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "SearchActivity"
 
+@AndroidEntryPoint
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding : ActivitySearchBinding
-    private lateinit var mViewModel : SearchActivityViewModel
+    private val mViewModel : SearchActivityViewModel by viewModels()
     private lateinit var mRecyclerViewAdapter: SearchFoodRecyclerViewAdapter
     private lateinit var mSearchBroadcastReceiver: BroadcastReceiver
 
@@ -38,7 +41,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this@SearchActivity , R.layout.activity_search)
-        mViewModel = ViewModelProvider(this , FoodiFactory(FooDiRepository.getInstance()))[SearchActivityViewModel::class.java]
         binding.searchViewModel = mViewModel
         addListeners()
         initRecyclerView()
@@ -68,8 +70,9 @@ class SearchActivity : AppCompatActivity() {
         mRecyclerViewAdapter.setOnItemClickListener(FoodItemClickListener())
         mRecyclerViewAdapter.setOnMenuItemClickListener(MenuItemClickListener())
         binding.searchFoodRecyclerView.run {
-            layoutManager = LinearLayoutManager(FooDiAdminApplication.getInstance())
+            layoutManager = CustomLinearLayoutManager(this@SearchActivity)
             adapter = mRecyclerViewAdapter
+            (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         }
     }
 

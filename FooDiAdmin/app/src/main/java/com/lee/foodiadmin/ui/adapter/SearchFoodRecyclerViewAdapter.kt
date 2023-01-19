@@ -46,10 +46,10 @@ class SearchFoodRecyclerViewAdapter : RecyclerView.Adapter<SearchFoodRecyclerVie
 
     override fun getItemCount() = mSearchFoodList.size
 
-    @SuppressLint("NotifyDataSetChanged")
+
     fun setList(list : MutableList<FoodData>){
         mSearchFoodList = list
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0 , itemCount)
     }
 
     inner class SearchFoodRecyclerViewHolder(private val binding : SearchItemBinding) : RecyclerView.ViewHolder(binding.root){

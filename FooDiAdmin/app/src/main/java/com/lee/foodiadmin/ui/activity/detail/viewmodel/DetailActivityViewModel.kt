@@ -6,14 +6,18 @@ import androidx.lifecycle.ViewModel
 import com.lee.foodiadmin.common.NOT_AVAILABLE
 import com.lee.foodiadmin.data.model.UpdateFoodData
 import com.lee.foodiadmin.data.repository.FooDiRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
+import javax.inject.Inject
 
 private const val TAG = "DetailActivityViewModel"
 
-class DetailActivityViewModel(private val repository: FooDiRepository) : ViewModel() {
+@HiltViewModel
+class DetailActivityViewModel
+    @Inject constructor (private val repository: FooDiRepository) : ViewModel() {
     val foodName = MutableLiveData<String>(NOT_AVAILABLE)
     val calorie = MutableLiveData<String>(NOT_AVAILABLE)
     val carbohydrate = MutableLiveData<String>(NOT_AVAILABLE)

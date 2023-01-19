@@ -4,12 +4,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.lee.foodiadmin.data.model.FoodData
 import com.lee.foodiadmin.data.repository.FooDiRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
+import javax.inject.Inject
 
-class SearchActivityViewModel(private val repository: FooDiRepository) : ViewModel() {
+@HiltViewModel
+class SearchActivityViewModel
+    @Inject constructor(private val repository: FooDiRepository) : ViewModel() {
     val searchFoodList = MutableLiveData<MutableList<FoodData>>()
     val searchText = MutableLiveData<String>("")
     val toastMessage = MutableLiveData<String>()
