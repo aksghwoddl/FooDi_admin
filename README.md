@@ -43,3 +43,11 @@
 <img width="30%" src="https://user-images.githubusercontent.com/65700842/208656557-de82aeef-8fa6-4d91-9d2a-bf678591a3e3.gif">
 
 
+### 😎 프로젝트 사용기술 설명
+##### 1️⃣ Dagger Hilt를 활용하여 의존성을 주입 해주었습니다.
+##### 2️⃣ MVVM 디자인 기반으로 프로젝트를 진행 하였습니다.
+##### 3️⃣ Coroutine을 통한 비동기 처리를 , RxBinding을 통한 UI event 처리를 하였습니다. (throttleFirst()를 통한 이중 클릭 방지)
+##### 4️⃣ Retrofit2를 통해 Rest통신을 하였습니다.
+##### 5️⃣ Repository를 사용하여 Data를 관리 하였습니다.
+
+
